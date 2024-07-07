@@ -10,7 +10,7 @@ phases:
     commands:
       - echo Starting build at `date`
       - IMAGE_TAG=$IMAGE_REPO_NAME:$CODEBUILD_BUILD_NUMBER
-      - docker build -t coworking:$IMAGE_TAG .
+      - docker build -t coworking:$IMAGE_TAG ./analytics
       - docker tag coworking:$IMAGE_TAG $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/coworking:$IMAGE_TAG
 
   post_build:
