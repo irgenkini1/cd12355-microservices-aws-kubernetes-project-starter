@@ -33,25 +33,9 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Set environment variables
 ENV DB_USERNAME=myuser
 ENV DB_PASSWORD=mypassword
-ENV DB_HOST=127.0.0.1
+ENV DB_HOST=host.docker.internal
 ENV DB_PORT=5433
 ENV DB_NAME=mydatabase
-
-# Initialize and seed the database
-RUN service postgresql start && \
-    su - postgres -c "psql -c \"CREATE USER ${DB_USERNAME} WITH PASSWORD '${DB_PASSWORD}';\"" && \
-    su - postgres -c "psql -c \"CREATE DATABASE ${DB_NAME};\"" && \
-    su - postgres -c "psql -c \"GRANT ALL PRIVILEGES ON DATABASE ${DB_NAME} TO ${DB_USERNAME};\""
-
-# Copy SQL files into the container
-COPY 1_create_tables.sql /app
-COPY 2_seed_users.sql /app
-COPY 3_seed_tokens.sql /app
-
-# Run SQL scripts
-RUN PGPASSWORD="${DB_PASSWORD}" psql --host "${DB_HOST}" -p "${DB_PORT}" -U "${DB_USERNAME}" -d "${DB_NAME}" < /app/1_create_tables.sql && \
-    PGPASSWORD="${DB_PASSWORD}" psql --host "${DB_HOST}" -p "${DB_PORT}" -U "${DB_USERNAME}" -d "${DB_NAME}" < /app/2_seed_users.sql && \
-    PGPASSWORD="${DB_PASSWORD}" psql --host "${DB_HOST}" -p "${DB_PORT}" -U "${DB_USERNAME}" -d "${DB_NAME}" < /app/3_seed_tokens.sql
 
 # Command to run the application
 CMD ["python3", "app.py"]
