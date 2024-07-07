@@ -10,12 +10,10 @@ phases:
     commands:
       - echo Building the Docker image...
       - IMAGE_TAG=$IMAGE_REPO_NAME:$CODEBUILD_BUILD_NUMBER
-      - echo "Docker build command: docker build -t coworking:$IMAGE_TAG ./analytics"
       - docker build -t coworking:$IMAGE_TAG ./analytics
       - docker tag coworking:$IMAGE_TAG $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/coworking:$IMAGE_TAG
 
   post_build:
     commands:
-      - echo Completed build at `date`
       - echo Pushing the Docker image...
       - docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/coworking:$IMAGE_TAG
