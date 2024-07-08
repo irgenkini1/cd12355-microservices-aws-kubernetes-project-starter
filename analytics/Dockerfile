@@ -37,5 +37,7 @@ ENV DB_HOST=host.docker.internal
 ENV DB_PORT=5433
 ENV DB_NAME=mydatabase
 
+EXPOSE 5153
+
 # Command to run the application
 CMD ["python3", "app.py"]
